@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptForge OP_NET — Bitcoin Smart Contract Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="#F7931A" stroke-width="1.5" fill="none"/>
+          <path d="M14 6L22 10V18L14 22L6 18V10L14 6Z" fill="#F7931A" opacity="0.15"/>
+          <text x="9" y="17" font-size="10" fill="#F7931A" font-weight="bold">₿</text>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">PromptForge</span>
+        <span class="logo-sub">OP_NET · Bitcoin L1</span>
+      </div>
+    </div>
+
+    <nav class="nav-links">
+      <a href="#" class="nav-link active">Forge</a>
+      <a href="#" class="nav-link">Docs</a>
+      <a href="#" class="nav-link">Templates</a>
+      <span class="network-badge">
+        <span class="net-dot"></span>Testnet
+      </span>
+    </nav>
+
+    <button class="wallet-btn" id="connectWallet">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="7" width="20" height="14" rx="2"/>
+        <path d="M16 12h2"/>
+        <path d="M2 10l20-7"/>
+      </svg>
+      Connect Wallet
+    </button>
+  </header>
+
+  <!-- Wallet Panel -->
+  <div class="wallet-panel" id="walletPanel" style="display:none;">
+    <div class="wallet-panel-inner">
+      <h3>Select OP_NET Wallet</h3>
+      <p class="wallet-hint">Connect a Bitcoin wallet compatible with OP_NET protocol</p>
+      <div class="wallet-options">
+        <button class="wallet-option" onclick="selectWallet('unisat')">
+          <span class="wallet-logo">🟠</span>
+          <div>
+            <strong>UniSat Wallet</strong>
+            <small>Bitcoin · OP_NET Ready</small>
+          </div>
+        </button>
+        <button class="wallet-option" onclick="selectWallet('okx')">
+          <span class="wallet-logo">⬛</span>
+          <div>
+            <strong>OKX Wallet</strong>
+            <small>Bitcoin · OP_NET Ready</small>
+          </div>
+        </button>
+        <button class="wallet-option" onclick="selectWallet('xverse')">
+          <span class="wallet-logo">🔵</span>
+          <div>
+            <strong>Xverse</strong>
+            <small>Bitcoin · OP_NET Ready</small>
+          </div>
+        </button>
+        <button class="wallet-option" onclick="selectWallet('leather')">
+          <span class="wallet-logo">🟤</span>
+          <div>
+            <strong>Leather</strong>
+            <small>Bitcoin · OP_NET Ready</small>
+          </div>
+        </button>
+      </div>
+      <button class="close-panel" onclick="closeWalletPanel()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Wallet Status Bar -->
+  <div class="wallet-status-bar" id="walletStatus" style="display:none;">
+    <div class="wallet-status-inner">
+      <div class="status-left">
+        <span class="status-dot connected"></span>
+        <span id="walletName">UniSat</span>
+        <span class="addr-badge" id="walletAddr">bc1q...demo</span>
+      </div>
+      <div class="status-right">
+        <span class="balance-tag" id="walletBalance">0.0042 BTC</span>
+        <span class="network-tag">OP_NET Testnet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-chip">Bitcoin Layer 1 · Smart Contracts</span>
+      </div>
+      <h1 class="hero-title">
+        Forge Smart Contracts<br/>
+        <span class="hero-accent">on Bitcoin</span>
+      </h1>
+      <p class="hero-desc">Describe your contract in plain English. PromptForge generates, validates, and deploys OP_NET-native smart contracts to Bitcoin Testnet.</p>
+    </section>
+
+    <!-- Prompt Panel -->
+    <section class="panel prompt-panel">
+      <div class="panel-header">
+        <div class="panel-title-row">
+          <span class="panel-icon">✦</span>
+          <h2 class="panel-title">Contract Prompt</h2>
+        </div>
+        <div class="template-chips">
+          <button class="chip" onclick="fillTemplate('escrow')">Escrow</button>
+          <button class="chip" onclick="fillTemplate('milestone')">Milestone</button>
+          <button class="chip" onclick="fillTemplate('multisig')">MultiSig Vault</button>
+          <button class="chip" onclick="fillTemplate('dao')">DAO Voting</button>
+          <button class="chip" onclick="fillTemplate('staking')">Staking Pool</button>
+          <button class="chip" onclick="fillTemplate('crowdfund')">Crowdfunding</button>
+        </div>
+      </div>
+
+      <div class="prompt-area">
+        <textarea
+          id="promptInput"
+          class="prompt-textarea"
+          placeholder="Describe the smart contract you want to deploy on OP_NET...
+
+Example: Create an escrow contract where a buyer deposits Bitcoin, a seller fulfills a condition, and an arbiter can release or refund funds. Protect against reentrancy and require multi-party approval."
+          rows="6"
+        ></textarea>
+        <div class="prompt-footer">
+          <span class="char-count" id="charCount">0 / 1000</span>
+          <button class="forge-btn" id="forgeBtn" onclick="forgeContract()">
+            <span class="forge-btn-text">Forge Contract</span>
+            <span class="forge-btn-icon">⚡</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Bar -->
+    <div class="progress-track" id="progressTrack" style="display:none;">
+      <div class="progress-steps">
+        <div class="step" id="step1">
+          <div class="step-dot"></div>
+          <span>Parsing Prompt</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" id="step2">
+          <div class="step-dot"></div>
+          <span>Generating Code</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" id="step3">
+          <div class="step-dot"></div>
+          <span>Security Scan</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" id="step4">
+          <div class="step-dot"></div>
+          <span>Ready</span>
+        </div>
+      </div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Output Grid -->
+    <div class="output-grid" id="outputGrid" style="display:none;">
+
+      <!-- Code Viewer -->
+      <section class="panel code-panel">
+        <div class="panel-header">
+          <div class="panel-title-row">
+            <span class="panel-icon">📄</span>
+            <h2 class="panel-title">Generated Contract</h2>
+          </div>
+          <div class="code-actions">
+            <span class="lang-badge">TypeScript · OP_NET</span>
+            <button class="icon-btn" onclick="copyCode()" title="Copy">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+            <button class="icon-btn" onclick="downloadCode()" title="Download">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </button>
+          </div>
+        </div>
+        <div class="code-viewer" id="codeViewer">
+          <pre><code id="contractCode"></code></pre>
+        </div>
+      </section>
+
+      <!-- Security Panel -->
+      <section class="panel security-panel">
+        <div class="panel-header">
+          <div class="panel-title-row">
+            <span class="panel-icon">🛡</span>
+            <h2 class="panel-title">Security Report</h2>
+          </div>
+          <div id="securityScore" class="score-badge">—</div>
+        </div>
+
+        <div class="security-checks" id="securityChecks">
+          <div class="check-item" id="check-access">
+            <div class="check-icon pending">○</div>
+            <div class="check-body">
+              <span class="check-label">Access Control</span>
+              <span class="check-desc">Verifying owner and role modifiers</span>
+            </div>
+            <span class="check-status">Pending</span>
+          </div>
+          <div class="check-item" id="check-input">
+            <div class="check-icon pending">○</div>
+            <div class="check-body">
+              <span class="check-label">Input Validation</span>
+              <span class="check-desc">Checking parameter guards and bounds</span>
+            </div>
+            <span class="check-status">Pending</span>
+          </div>
+          <div class="check-item" id="check-state">
+            <div class="check-icon pending">○</div>
+            <div class="check-body">
+              <span class="check-label">State Transitions</span>
+              <span class="check-desc">Verifying safe state machine logic</span>
+            </div>
+            <span class="check-status">Pending</span>
+          </div>
+          <div class="check-item" id="check-reentrant">
+            <div class="check-icon pending">○</div>
+            <div class="check-body">
+              <span class="check-label">Reentrancy Protection</span>
+              <span class="check-desc">Checking mutex and guard patterns</span>
+            </div>
+            <span class="check-status">Pending</span>
+          </div>
+          <div class="check-item" id="check-events">
+            <div class="check-icon pending">○</div>
+            <div class="check-body">
+              <span class="check-label">Event Logging</span>
+              <span class="check-desc">Validating contract event emissions</span>
+            </div>
+            <span class="check-status">Pending</span>
+          </div>
+        </div>
+
+        <div class="security-summary" id="securitySummary" style="display:none;"></div>
+
+        <button class="deploy-btn" id="deployBtn" onclick="deployContract()" disabled>
+          <span class="deploy-btn-text">Deploy to OP_NET Testnet</span>
+          <span class="deploy-btn-icon">🚀</span>
+        </button>
+      </section>
+    </div>
+
+    <!-- Deployment Result -->
+    <section class="panel deploy-result" id="deployResult" style="display:none;">
+      <div class="panel-header">
+        <div class="panel-title-row">
+          <span class="panel-icon">✅</span>
+          <h2 class="panel-title">Deployment Successful</h2>
+        </div>
+        <span class="confirmed-badge">Confirmed</span>
+      </div>
+
+      <div class="deploy-grid">
+        <div class="deploy-item">
+          <label>Contract Address</label>
+          <div class="deploy-value-row">
+            <code id="deployAddress" class="deploy-value">—</code>
+            <button class="copy-mini" onclick="copyField('deployAddress')">Copy</button>
+          </div>
+        </div>
+        <div class="deploy-item">
+          <label>Transaction Hash</label>
+          <div class="deploy-value-row">
+            <code id="deployTx" class="deploy-value">—</code>
+            <button class="copy-mini" onclick="copyField('deployTx')">Copy</button>
+          </div>
+        </div>
+        <div class="deploy-item">
+          <label>Block Number</label>
+          <code id="deployBlock" class="deploy-value">—</code>
+        </div>
+        <div class="deploy-item">
+          <label>Network</label>
+          <code class="deploy-value">OP_NET Testnet (Bitcoin)</code>
+        </div>
+        <div class="deploy-item">
+          <label>Gas Used (Satoshis)</label>
+          <code id="deployGas" class="deploy-value">—</code>
+        </div>
+        <div class="deploy-item">
+          <label>Timestamp</label>
+          <code id="deployTime" class="deploy-value">—</code>
+        </div>
+      </div>
+
+      <div class="deploy-actions">
+        <a id="explorerLink" href="#" target="_blank" class="explorer-btn">
+          View on OP_NET Explorer →
+        </a>
+        <button class="new-contract-btn" onclick="resetForge()">Forge New Contract</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>PromptForge OP_NET · Built for Bitcoin Layer 1 Smart Contracts</span>
+      <div class="footer-links">
+        <a href="https://github.com/OP-NET" target="_blank">GitHub</a>
+        <a href="https://docs.opnet.org" target="_blank">OP_NET Docs</a>
+        <a href="#" target="_blank">Testnet Faucet</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/background.js"></script>
+  <script src="js/wallet.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/security.js"></script>
+  <script src="js/deploy.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
