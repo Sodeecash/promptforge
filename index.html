@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptForge — Deploy Smart Contracts with AI</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-canvas">
+    <canvas id="bgCanvas"></canvas>
+    <div class="grid-overlay"></div>
+    <div class="scanline"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text">PROMPT<span class="accent">FORGE</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#templates">Templates</a>
+      <a href="forge.html" class="nav-cta">Launch App →</a>
+    </div>
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        <span>₿ Bitcoin L1 · OP_NET Mainnet Live Mar 17</span>
+      </div>
+      <h1 class="hero-title">
+        Forge Bitcoin<br/>
+        <span class="title-gradient">Smart Contracts with AI</span>
+      </h1>
+      <p class="hero-sub">
+        Describe your contract in plain English. PromptForge generates
+        production-ready AssemblyScript/TypeScript contracts compiled to WASM,
+        deploys them on Bitcoin Layer 1 via OP_NET — no sidechains, no bridges,
+        real BTC as gas.
+      </p>
+      <div class="hero-actions">
+        <a href="forge.html" class="btn-primary">
+          <span>Start Forging</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <a href="#features" class="btn-ghost">See How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">₿</span><span class="stat-label">BTC is Gas</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">WASM</span><span class="stat-label">No EVM Required</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">L1</span><span class="stat-label">Real Bitcoin</span></div>
+      </div>
+    </div>
+      <div class="hero-visual">
+        <div class="code-preview">
+          <div class="code-header">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <span class="code-title">EscrowVault.ts → Bitcoin L1</span>
+          </div>
+          <pre class="code-body"><code><span class="c-kw">import</span> { Blockchain, TransferHelper } <span class="c-kw">from</span> <span class="c-type">'@btc-vision/btc-runtime'</span>;
+<span class="c-kw">import</span> { Address } <span class="c-kw">from</span> <span class="c-type">'@btc-vision/btc-runtime'</span>;
+<span class="c-kw">import</span> { u256 } <span class="c-kw">from</span> <span class="c-type">'as-bignum/assembly'</span>;
+
+<span class="c-kw">@contract</span>
+<span class="c-type">export class</span> <span class="c-fn">EscrowVault</span> <span class="c-type">extends</span> OP20 {
+
+  <span class="c-kw">@call</span>
+  <span class="c-var">public</span> <span class="c-fn">deposit</span>(amountSats: u256): <span class="c-type">void</span> {
+    <span class="c-fn">TransferHelper</span>.safeTransferFrom(
+      <span class="c-fn">Blockchain</span>.btcAddress(),
+      <span class="c-fn">Blockchain</span>.tx.sender,
+      <span class="c-var">this</span>.address, amountSats
+    );
+  }
+}</code></pre>
+          <div class="code-footer">
+            <span class="security-badge good">✓ Security Passed</span>
+            <span class="deploy-badge">₿ Bitcoin L1 Ready</span>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-label">HOW IT WORKS</div>
+    <h2 class="section-title">Three Steps to Deployment</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-num">01</div>
+        <div class="feature-icon">✍️</div>
+        <h3>Describe in Plain English</h3>
+        <p>Type any contract idea in natural language. PromptForge auto-detects the contract type and generates Bitcoin-native AssemblyScript code.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">02</div>
+        <div class="feature-icon">🤖</div>
+        <h3>AI Generates & Audits</h3>
+        <p>Our AI writes production-ready TypeScript/AssemblyScript WASM contracts and runs automated security checks — no Solidity, no EVM.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">03</div>
+        <div class="feature-icon">₿</div>
+        <h3>Deploy on Bitcoin L1</h3>
+        <p>Connect OP_WALLET, pay fees in real BTC satoshis, and deploy your WASM contract directly to Bitcoin Layer 1 via OP_NET — no bridge required.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Templates Section -->
+  <section class="templates-section" id="templates">
+    <div class="section-label">TEMPLATE LIBRARY</div>
+    <h2 class="section-title">Start From a Template</h2>
+    <div class="templates-grid">
+      <div class="template-card" data-template="escrow">
+        <div class="template-icon">🔒</div>
+        <h3>Escrow</h3>
+        <p>Trustless payment escrow with conditional release and dispute resolution</p>
+        <a href="forge.html?template=escrow" class="template-btn">Use Template →</a>
+      </div>
+      <div class="template-card" data-template="dao">
+        <div class="template-icon">🏛️</div>
+        <h3>DAO</h3>
+        <p>Decentralized autonomous organization with proposal and voting mechanisms</p>
+        <a href="forge.html?template=dao" class="template-btn">Use Template →</a>
+      </div>
+      <div class="template-card" data-template="staking">
+        <div class="template-icon">💎</div>
+        <h3>Staking</h3>
+        <p>Token staking pool with configurable APY and lockup periods</p>
+        <a href="forge.html?template=staking" class="template-btn">Use Template →</a>
+      </div>
+      <div class="template-card" data-template="crowdfunding">
+        <div class="template-icon">🎯</div>
+        <h3>Crowdfunding</h3>
+        <p>Goal-based fundraising with automatic refunds if target not reached</p>
+        <a href="forge.html?template=crowdfunding" class="template-btn">Use Template →</a>
+      </div>
+      <div class="template-card" data-template="multisig">
+        <div class="template-icon">🔑</div>
+        <h3>MultiSig</h3>
+        <p>Multi-signature wallet requiring M-of-N approvals for transactions</p>
+        <a href="forge.html?template=multisig" class="template-btn">Use Template →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-glow"></div>
+    <h2>Ready to Forge?</h2>
+    <p>No coding experience required. Just describe what you need.</p>
+    <a href="forge.html" class="btn-primary large">
+      <span>Open the Forge</span>
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <span class="brand-icon">⬡</span>
+      <span>PROMPT<span class="accent">FORGE</span></span>
+    </div>
+    <div class="footer-links">
+      <a href="forge.html">Launch App</a>
+      <a href="#templates">Templates</a>
+    </div>
+    <div class="footer-note">Built for OP_NET Testnet</div>
+  </footer>
+
+  <script src="js/bg.js"></script>
+  <script src="js/landing.js"></script>
+</body>
+</html>
